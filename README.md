@@ -103,7 +103,7 @@ The following snippet is from the [led_plugin.sdf](examples/led_plugin.sdf) towe
     </default_state>
   </led>
 
-  <default_mode>ready</default_mode>
+  <startup_mode>ready</startup_mode>
 
   <!-- Mode Descriptions -->
   <mode name="ready">
@@ -182,7 +182,7 @@ The snippet above describes an LED using the `<led>` element. Each LED can be de
 A `<default_state>` element is used when the LED is inactive or .reset
 
 ```xml
-  <default_mode>ready</default_mode>
+  <startup_mode>ready</startup_mode>
 
   <!-- Mode Descriptions -->
   <mode name="ready">
@@ -202,7 +202,7 @@ A `<default_state>` element is used when the LED is inactive or .reset
   </mode>
 ```
 
-This snippet specifies the `<default_mode>` which is when the simulation starts. If no default mode is specified, the first described mode is used as the default.
+This snippet specifies the `<startup_mode>` which is set by default and used when the simulation starts. If no startup mode is specified, the first described mode is used as the startup mode by default.
 
 An LED Mode (in this case "ready" mode) is defined using a `<mode>` tag. This specific mode specifies the `ready_led` as the only active LED using the `<active_leds>` tag. If no active LEDs are specified, all the LEDs are used by default. The actual behavior of the mode is defined using the `<step>` tags which are played sequentially by the plugin in the order they are described.
 

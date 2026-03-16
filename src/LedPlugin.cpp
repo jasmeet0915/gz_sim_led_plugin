@@ -328,8 +328,8 @@ class gz::sim::systems::LedPluginPrivate
   /// \brief Boolean that tells if all the LEDs are ready or not
   public: bool ledsReady{false};
 
-  /// \brief Default LED Mode to use
-  public: LedMode defaultLedMode;
+  /// \brief Startup LED Mode to use
+  public: LedMode startupLedMode;
 
   /// \brief Current LED Mode to use
   public: LedMode currentLedMode;
@@ -440,18 +440,18 @@ void LedPlugin::Configure(
     return;
   }
 
-  // Set the default led mode
+  // Set the startup led mode
   if (!this->dataPtr->allLedModes.empty())
   {
-    if (_sdf->HasElement("default_mode"))
+    if (_sdf->HasElement("startup_mode"))
     {
-      std::string defaultModeName = _sdf->Get<std::string>("default_mode");
+      std::string startupModeName = _sdf->Get<std::string>("startup_mode");
 
-      auto defaultModeIter = std::find_if(
+      auto startupModeIter = std::find_if(
         this->dataPtr->allLedModes.begin(), this->dataPtr->allLedModes.end(),
         [&](const LedMode _ledMode)
         {
-          if (_ledMode.name == defaultModeName)
+          if (_ledMode.name == startupModeName)
           {
             return true;
           }
@@ -459,22 +459,22 @@ void LedPlugin::Configure(
           return false;
         });
 
-      if (defaultModeIter == this->dataPtr->allLedModes.end())
+      if (startupModeIter == this->dataPtr->allLedModes.end())
       {
-        gzwarn << "[LED PLUGIN] Could not find default mode name: " << defaultModeName
-              << " in the led modes mentioned. Using the first mode as default." << std::endl;
-        this->dataPtr->defaultLedMode = this->dataPtr->allLedModes.front();
+        gzwarn << "[LED PLUGIN] Could not find startup mode name: " << startupModeName
+              << " in the led modes mentioned. Using the first mode as startup." << std::endl;
+        this->dataPtr->startupLedMode = this->dataPtr->allLedModes.front();
       }
       else
       {
-        this->dataPtr->defaultLedMode = *(defaultModeIter);
+        this->dataPtr->startupLedMode = *(startupModeIter);
       }
     }
     else
     {
-      gzwarn << "[LED PLUGIN] No default led mode mentioned."
-            << " in the led modes mentioned. Using the first mode as default." << std::endl;
-      this->dataPtr->defaultLedMode = this->dataPtr->allLedModes.front();
+      gzwarn << "[LED PLUGIN] No startup led mode mentioned."
+            << " in the led modes mentioned. Using the first mode as startup." << std::endl;
+      this->dataPtr->startupLedMode = this->dataPtr->allLedModes.front();
     }
   }
   else
@@ -485,11 +485,11 @@ void LedPlugin::Configure(
     return;
   }
 
-  this->dataPtr->currentLedMode = this->dataPtr->defaultLedMode;
+  this->dataPtr->currentLedMode = this->dataPtr->startupLedMode;
   gzmsg << "[LED PLUGIN] Successfully loaded the LED plugin with "
         << this->dataPtr->allLedsInGroup.size() << " LEDs, "
         << this->dataPtr->allLedModes.size() << " modes and "
-        << this->dataPtr->defaultLedMode.name << " as the default mode" << std::endl;
+        << this->dataPtr->startupLedMode.name << " as the startup mode" << std::endl;
 
   // Advertise the LED Mode change service
   auto validModeChangeServiceName = transport::TopicUtils::AsValidTopic(modeChangeServiceName);

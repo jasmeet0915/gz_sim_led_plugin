@@ -239,7 +239,7 @@
           <light_name>disco_blue::disco_blue_light</light_name>
         </led>
 
-        <default_mode>party</default_mode>
+        <startup_mode>party</startup_mode>
 
         <!-- RGB cycle -->
         <mode name="rgb_cycle">

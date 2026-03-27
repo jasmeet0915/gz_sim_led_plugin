@@ -24,7 +24,6 @@
 
 #include <gz/plugin/Register.hh>
 
-#include <gz/msgs/boolean.pb.h>
 #include <gz/msgs/stringmsg.pb.h>
 #include <gz/msgs/visual.pb.h>
 #include <gz/msgs/light.pb.h>
@@ -291,9 +290,8 @@ struct LedMode
 class gz::sim::systems::LedPluginPrivate
 {
   /// \brief Callback executed to change the current LED mode.
-  /// \param[in] _req String specifying the name of the required mode.
-  /// \param[out] _resp Boolean for successful mode change
-  public: bool OnLedModeChange(const msgs::StringMsg &_req, msgs::Boolean &_resp);
+  /// \param[in] _msg String specifying the name of the required mode.
+  public: void OnLedModeChange(const msgs::StringMsg &_msg);
 
   /// \brief
   /// \param[in] _visualEntity
@@ -382,8 +380,8 @@ void LedPlugin::Configure(
 
   this->dataPtr->allLedModes = std::vector<LedMode>();
 
-  // Construct the name for the mode change service of the led group
-  std::string modeChangeServiceName;
+  // Construct the name for the mode change topic of the led group
+  std::string modeChangeTopicName;
   if (_sdf->HasElement("led_group_name"))
   {
     this->dataPtr->ledGroupName = _sdf->Get<std::string>("led_group_name");
@@ -391,11 +389,11 @@ void LedPlugin::Configure(
   else
   {
     gzwarn << "No name is specified for the led group, model name"
-           << " will be used for the change_mode service name" << std::endl;
+           << " will be used for the change_mode topic name" << std::endl;
     this->dataPtr->ledGroupName = "led_" + this->dataPtr->model.Name(_ecm);
   }
 
-  modeChangeServiceName = "/" + this->dataPtr->ledGroupName + "/change_led_mode";
+  modeChangeTopicName = "/" + this->dataPtr->ledGroupName + "/change_led_mode";
 
   // Read and create different LEDs as part of the group
   if (_sdf->HasElement("led"))
@@ -496,16 +494,16 @@ void LedPlugin::Configure(
         << this->dataPtr->allLedModes.size() << " modes and "
         << this->dataPtr->startupLedMode.name << " as the startup mode" << std::endl;
 
-  // Advertise the LED Mode change service
-  auto validModeChangeServiceName = transport::TopicUtils::AsValidTopic(modeChangeServiceName);
-  if (validModeChangeServiceName.empty())
+  // Subscribe to the LED Mode change topic
+  auto validModeChangeTopicName = transport::TopicUtils::AsValidTopic(modeChangeTopicName);
+  if (validModeChangeTopicName.empty())
   {
-    gzerr << "Failed to create valid mode change service. Name not valid: ["
-          << validModeChangeServiceName << "]" << std::endl;
+    gzerr << "Failed to create valid mode change topic. Name not valid: ["
+          << validModeChangeTopicName << "]" << std::endl;
     return;
   }
 
-  this->dataPtr->node.Advertise(validModeChangeServiceName,
+  this->dataPtr->node.Subscribe(validModeChangeTopicName,
     &LedPluginPrivate::OnLedModeChange, this->dataPtr.get());
 
   gzmsg << "[LED PLUGIN] Initialized LedPlugin Plugin" << std::endl;
@@ -787,12 +785,11 @@ void LedPluginPrivate::ResetLEDs(EntityComponentManager &_ecm)
 }
 
 //////////////////////////////////////////////////
-bool LedPluginPrivate::OnLedModeChange(const msgs::StringMsg &_req,
-  msgs::Boolean &_resp)
+void LedPluginPrivate::OnLedModeChange(const msgs::StringMsg &_msg)
 {
   std::lock_guard<std::mutex> lock(this->mutex);
 
-  std::string requestedModeName = _req.data();
+  std::string requestedModeName = _msg.data();
   gzmsg << "[LED PLUGIN] [ON MODE CHANGE] received request to change mode to: "
         << requestedModeName << std::endl;
 
@@ -801,14 +798,13 @@ bool LedPluginPrivate::OnLedModeChange(const msgs::StringMsg &_req,
   std::transform(requestedModeNameLower.begin(), requestedModeNameLower.end(),
     requestedModeNameLower.begin(), ::tolower);
 
-  // Reset all LEDs and keep them off is user requested "reset" or "off" mode
+  // Reset all LEDs and keep them off if user requested "reset" or "off" mode
   if (requestedModeNameLower == "reset" || requestedModeNameLower == "off")
   {
     gzmsg << "[LED PLUGIN] [ON MODE CHANGE] Turning off LEDs (reset/off requested)" << std::endl;
     this->ledsOff = true;
     this->ledsReady = false;
-    _resp.set_data(true);
-    return true;
+    return;
   }
 
   // Case-insensitive search for the requested mode
@@ -826,9 +822,7 @@ bool LedPluginPrivate::OnLedModeChange(const msgs::StringMsg &_req,
   {
     gzerr << "[LED PLUGIN] Requested LED Mode: " << requestedModeName
           << " was not described" << std::endl;
-
-    _resp.set_data(false);
-    return false;
+    return;
   }
 
   gzmsg << "[LED PLUGIN] [ON MODE CHANGE] Changing led mode from: "
@@ -841,12 +835,9 @@ bool LedPluginPrivate::OnLedModeChange(const msgs::StringMsg &_req,
   gzmsg << "[LED PLUGIN] [ON MODE CHANGE] Current led mode set to: "
         << this->currentLedMode.name << std::endl;
 
-  _resp.set_data(true);
-
   // Setting LEDs as not ready as we want them to be reset after a mode change
   // This is done because we cannot directly reset the LEDs from here as ECM is required
   this->ledsReady = false;
-  return true;
 }
 
 GZ_ADD_PLUGIN(LedPlugin,

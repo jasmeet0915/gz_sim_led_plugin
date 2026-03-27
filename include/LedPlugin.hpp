@@ -37,7 +37,8 @@ namespace systems
    * gz/sim/systems/LedPlugin.hh
   **/
   /// \brief Plugin that makes a visual blink between two colors. This can be used to simulate
-  /// LEDs .See the example usage below:
+  /// LEDs. Mode changes are done via a Gazebo Transport topic (bridgable with ROS 2).
+  /// See the example usage below:
   ///
   /// ## System Parameters:
   ///

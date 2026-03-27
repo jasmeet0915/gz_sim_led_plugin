@@ -63,8 +63,19 @@ def generate_launch_description():
 		output='screen'
 	)
 
+	# Bridge the LED mode change topic from ROS 2 to Gazebo
+	led_mode_bridge = Node(
+		package='ros_gz_bridge',
+		executable='parameter_bridge',
+		arguments=[
+			'/led_robot/change_led_mode@std_msgs/msg/String]gz.msgs.StringMsg'
+		],
+		output='screen'
+	)
+
 	return LaunchDescription([
 		gazebo_launch,
 		robot_state_publisher_node,
 		spawn_robot,
+		led_mode_bridge,
 	])

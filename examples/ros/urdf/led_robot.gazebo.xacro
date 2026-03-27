@@ -1,0 +1,103 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="led_robot_gazebo">
+  <gazebo reference="chassis_base">
+    <light type="point" name="point_light_down">
+      <pose>0 0 0.284363 0 0 0</pose>
+      <diffuse>1 1 1 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1.5</range>
+        <constant>0.8</constant>
+        <linear>0.5</linear>
+        <quadratic>0.5</quadratic>
+      </attenuation>
+      <cast_shadows>true</cast_shadows>
+    </light>
+  </gazebo>
+
+  <gazebo>
+    <plugin name="gz::sim::systems::DiffDrive" filename="gz-sim-diff-drive-system">
+      <left_joint>left_wheel_joint</left_joint>
+      <right_joint>right_wheel_joint</right_joint>
+      <wheel_separation>1.25</wheel_separation>
+      <wheel_radius>0.3</wheel_radius>
+      <odom_publish_frequency>1</odom_publish_frequency>
+      <max_linear_acceleration>1</max_linear_acceleration>
+      <min_linear_acceleration>-1</min_linear_acceleration>
+      <max_angular_acceleration>2</max_angular_acceleration>
+      <min_angular_acceleration>-2</min_angular_acceleration>
+      <max_linear_velocity>0.5</max_linear_velocity>
+      <min_linear_velocity>-0.5</min_linear_velocity>
+      <max_angular_velocity>1</max_angular_velocity>
+      <min_angular_velocity>-1</min_angular_velocity>
+    </plugin>
+
+    <!-- LED Plugin -->
+    <plugin name="gz::sim::systems::LedPlugin" filename="libgz_led_plugin.so">
+      <led_group_name>led_robot</led_group_name>
+      <led name="back_led">
+        <visual_name>back_led::back_led_visual_visual</visual_name>
+      </led>
+      <led name="front_led">
+        <visual_name>front_led::front_led_visual_visual</visual_name>
+      </led>
+      <led name="bottom_led">
+        <light_name>chassis_base::point_light_down</light_name>
+      </led>
+      <startup_mode>idle</startup_mode>
+      <mode name="idle">
+        <step always_on="false">
+          <color>0 1 1 1</color>
+          <on_time>1.0</on_time>
+          <intensity>2.0</intensity>
+        </step>
+        <step always_on="false">
+          <color>1 1 1 1</color>
+          <on_time>1.0</on_time>
+          <intensity>0.0</intensity>
+        </step>
+      </mode>
+      <mode name="emergency">
+        <step always_on="false">
+          <color>1 0 0 1</color>
+          <on_time>1.0</on_time>
+          <intensity>2.0</intensity>
+        </step>
+        <step always_on="false">
+          <color>1 1 1 1</color>
+          <on_time>1.0</on_time>
+          <intensity>0.0</intensity>
+        </step>
+      </mode>
+      <mode name="front_navigation">
+        <active_leds>
+          <led>front_led</led>
+        </active_leds>
+        <step always_on="true">
+          <color>0 1 1 1</color>
+        </step>
+      </mode>
+      <mode name="reverse_navigation">
+        <active_leds>
+          <led>back_led</led>
+        </active_leds>
+        <step always_on="true">
+          <color>0 1 1 1</color>
+        </step>
+      </mode>
+    </plugin>
+  </gazebo>
+
+  <gazebo reference="base_to_top_joint">
+    <preserveFixedJoint>true</preserveFixedJoint>
+  </gazebo>
+  <gazebo reference="top_to_front_led_joint">
+    <preserveFixedJoint>true</preserveFixedJoint>
+  </gazebo>
+  <gazebo reference="top_to_back_led_joint">
+    <preserveFixedJoint>true</preserveFixedJoint>
+  </gazebo>
+  <gazebo reference="caster_wheel">
+    <preserveFixedJoint>true</preserveFixedJoint>
+  </gazebo>
+</robot>

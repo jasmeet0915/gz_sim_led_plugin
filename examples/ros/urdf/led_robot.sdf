@@ -1,0 +1,437 @@
+<sdf version='1.11'>
+  <model name='led_robot'>
+    <link name='chassis_base'>
+      <inertial>
+        <pose>-0.90304061039203332 0 -0.1048572727908766 0 0 0</pose>
+        <mass>2.1439499999999998</mass>
+        <inertia>
+          <ixx>0.41824963632547402</ixx>
+          <ixy>0</ixy>
+          <ixz>-0.51588503376478001</ixz>
+          <iyy>2.0941187911243229</iyy>
+          <iyz>0</iyz>
+          <izz>1.9665281547988489</izz>
+        </inertia>
+      </inertial>
+      <collision name='chassis_base_collision_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>2 1 0.56872599999999995</size>
+          </box>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <collision name='chassis_base_fixed_joint_lump__caster_collision_collision_1'>
+        <pose>-0.80571099999999996 0 -0.29999999999999999 0 0 0</pose>
+        <geometry>
+          <sphere>
+            <radius>0.20000000000000001</radius>
+          </sphere>
+        </geometry>
+      </collision>
+      <visual name='chassis_base_visual_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>2 1 0.56872599999999995</size>
+          </box>
+        </geometry>
+        <material>
+          <diffuse>0.625 0.625 1 1</diffuse>
+          <ambient>0.625 0.625 1 1</ambient>
+        </material>
+      </visual>
+      <visual name='chassis_base_fixed_joint_lump__caster_visual_visual_1'>
+        <pose>-0.80571099999999996 0 -0.29999999999999999 0 0 0</pose>
+        <geometry>
+          <sphere>
+            <radius>0.20000000000000001</radius>
+          </sphere>
+        </geometry>
+        <material>
+          <diffuse>0.25 0.25 0.25 1</diffuse>
+          <ambient>0.25 0.25 0.25 1</ambient>
+        </material>
+      </visual>
+      <light name='point_light_down' type='point'>
+        <pose>0 0 0.28436299999999998 0 0 0</pose>
+        <diffuse>1 1 1 1</diffuse>
+        <specular>0.100000001 0.100000001 0.100000001 1</specular>
+        <attenuation>
+          <range>1.5</range>
+          <constant>0.80000000000000004</constant>
+          <linear>0.5</linear>
+          <quadratic>0.5</quadratic>
+        </attenuation>
+        <cast_shadows>true</cast_shadows>
+        <direction>0 0 -1</direction>
+        <spot>
+          <inner_angle>0</inner_angle>
+          <outer_angle>0</outer_angle>
+          <falloff>0</falloff>
+        </spot>
+      </light>
+    </link>
+    <joint name='base_to_top_joint' type='fixed'>
+      <pose relative_to='chassis_base'>0 0 0.309363 0 0 0</pose>
+      <parent>chassis_base</parent>
+      <child>chassis_top</child>
+      <axis>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-inf</lower>
+          <upper>inf</upper>
+        </limit>
+      </axis>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.20000000000000001</erp>
+          </limit>
+        </ode>
+      </physics>
+    </joint>
+    <link name='chassis_top'>
+      <pose relative_to='base_to_top_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>-0.15142700000000001 0 0.48436299999999999 0 0 0</pose>
+        <mass>1.14395</mass>
+        <inertia>
+          <ixx>0.126164</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.41651899999999997</iyy>
+          <iyz>0</iyz>
+          <izz>0.481014</izz>
+        </inertia>
+      </inertial>
+      <collision name='chassis_top_collision_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1.8999999999999999 1 0.050000000000000003</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name='chassis_top_visual_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1.8999999999999999 1 0.050000000000000003</size>
+          </box>
+        </geometry>
+        <material>
+          <diffuse>0.625 0.625 1 1</diffuse>
+          <ambient>0.625 0.625 1 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name='top_to_back_led_joint' type='fixed'>
+      <pose relative_to='chassis_top'>0.97499999999999998 0 0 0 0 0</pose>
+      <parent>chassis_top</parent>
+      <child>back_led</child>
+      <axis>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-inf</lower>
+          <upper>inf</upper>
+        </limit>
+      </axis>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.20000000000000001</erp>
+          </limit>
+        </ode>
+      </physics>
+    </joint>
+    <link name='back_led'>
+      <pose relative_to='top_to_back_led_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0.823573 0 0.48436299999999999 0 0 0</pose>
+        <mass>0.01</mass>
+        <inertia>
+          <ixx>9.9999999999999995e-07</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>9.9999999999999995e-07</iyy>
+          <iyz>0</iyz>
+          <izz>9.9999999999999995e-07</izz>
+        </inertia>
+      </inertial>
+      <collision name='back_led_collision_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.050000000000000003 1 0.050000000000000003</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name='back_led_visual_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.050000000000000003 1 0.050000000000000003</size>
+          </box>
+        </geometry>
+        <material>
+          <diffuse>1 1 1 1</diffuse>
+          <ambient>1 1 1 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name='top_to_front_led_joint' type='fixed'>
+      <pose relative_to='chassis_top'>-0.97499999999999998 0 0 0 0 0</pose>
+      <parent>chassis_top</parent>
+      <child>front_led</child>
+      <axis>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-inf</lower>
+          <upper>inf</upper>
+        </limit>
+      </axis>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.20000000000000001</erp>
+          </limit>
+        </ode>
+      </physics>
+    </joint>
+    <link name='front_led'>
+      <pose relative_to='top_to_front_led_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>-1.1264270000000001 0 0.48436299999999999 0 0 0</pose>
+        <mass>0.01</mass>
+        <inertia>
+          <ixx>9.9999999999999995e-07</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>9.9999999999999995e-07</iyy>
+          <iyz>0</iyz>
+          <izz>9.9999999999999995e-07</izz>
+        </inertia>
+      </inertial>
+      <collision name='front_led_collision_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.050000000000000003 1 0.050000000000000003</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name='front_led_visual_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.050000000000000003 1 0.050000000000000003</size>
+          </box>
+        </geometry>
+        <material>
+          <diffuse>1 1 1 1</diffuse>
+          <ambient>1 1 1 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name='left_wheel_joint' type='revolute'>
+      <pose relative_to='chassis_base'>0.55428299999999997 0.62502899999999995 -0.025000000000000001 -1.5707 0 0</pose>
+      <parent>chassis_base</parent>
+      <child>left_wheel</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-inf</lower>
+          <upper>inf</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='left_wheel'>
+      <pose relative_to='left_wheel_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0.55428299999999997 0.62502899999999995 -0.025000000000000001 -1.5707 0 0</pose>
+        <mass>2</mass>
+        <inertia>
+          <ixx>0.14583299999999999</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.14583299999999999</iyy>
+          <iyz>0</iyz>
+          <izz>0.125</izz>
+        </inertia>
+      </inertial>
+      <collision name='left_wheel_collision_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <sphere>
+            <radius>0.29999999999999999</radius>
+          </sphere>
+        </geometry>
+      </collision>
+      <visual name='left_wheel_visual_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <sphere>
+            <radius>0.29999999999999999</radius>
+          </sphere>
+        </geometry>
+        <material>
+          <diffuse>0.25 0.25 0.25 1</diffuse>
+          <ambient>0.25 0.25 0.25 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name='right_wheel_joint' type='revolute'>
+      <pose relative_to='chassis_base'>0.55428200000000005 -0.62502899999999995 -0.025000000000000001 -1.5707 0 0</pose>
+      <parent>chassis_base</parent>
+      <child>right_wheel</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-inf</lower>
+          <upper>inf</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='right_wheel'>
+      <pose relative_to='right_wheel_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0.55428200000000005 -0.62502899999999995 -0.025000000000000001 -1.5707 0 0</pose>
+        <mass>2</mass>
+        <inertia>
+          <ixx>0.14583299999999999</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.14583299999999999</iyy>
+          <iyz>0</iyz>
+          <izz>0.125</izz>
+        </inertia>
+      </inertial>
+      <collision name='right_wheel_collision_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <sphere>
+            <radius>0.29999999999999999</radius>
+          </sphere>
+        </geometry>
+      </collision>
+      <visual name='right_wheel_visual_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <sphere>
+            <radius>0.29999999999999999</radius>
+          </sphere>
+        </geometry>
+        <material>
+          <diffuse>0.25 0.25 0.25 1</diffuse>
+          <ambient>0.25 0.25 0.25 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <plugin name='gz::sim::systems::DiffDrive' filename='gz-sim-diff-drive-system'>
+      <left_joint>left_wheel_joint</left_joint>
+      <right_joint>right_wheel_joint</right_joint>
+      <wheel_separation>1.25</wheel_separation>
+      <wheel_radius>0.3</wheel_radius>
+      <odom_publish_frequency>1</odom_publish_frequency>
+      <max_linear_acceleration>1</max_linear_acceleration>
+      <min_linear_acceleration>-1</min_linear_acceleration>
+      <max_angular_acceleration>2</max_angular_acceleration>
+      <min_angular_acceleration>-2</min_angular_acceleration>
+      <max_linear_velocity>0.5</max_linear_velocity>
+      <min_linear_velocity>-0.5</min_linear_velocity>
+      <max_angular_velocity>1</max_angular_velocity>
+      <min_angular_velocity>-1</min_angular_velocity>
+    </plugin>
+    <plugin name='gz::sim::systems::LedPlugin' filename='libgz_led_plugin.so'>
+      <led_group_name>led_robot</led_group_name>
+      <led name='back_led'>
+        <visual_name>back_led::back_led_visual</visual_name>
+      </led>
+      <led name='front_led'>
+        <visual_name>front_led::front_led_visual</visual_name>
+      </led>
+      <led name='bottom_led'>
+        <light_name>chassis_base::point_light_down</light_name>
+      </led>
+      <startup_mode>idle</startup_mode>
+      <mode name='idle'>
+        <step always_on='false'>
+          <color>0 1 1 1</color>
+          <on_time>1.0</on_time>
+          <intensity>2.0</intensity>
+        </step>
+        <step always_on='false'>
+          <color>1 1 1 1</color>
+          <on_time>1.0</on_time>
+          <intensity>0.0</intensity>
+        </step>
+      </mode>
+      <mode name='emergency'>
+        <step always_on='false'>
+          <color>1 0 0 1</color>
+          <on_time>1.0</on_time>
+          <intensity>2.0</intensity>
+        </step>
+        <step always_on='false'>
+          <color>1 1 1 1</color>
+          <on_time>1.0</on_time>
+          <intensity>0.0</intensity>
+        </step>
+      </mode>
+      <mode name='front_navigation'>
+        <active_leds>
+          <led>front_led</led>
+        </active_leds>
+        <step always_on='true'>
+          <color>0 1 1 1</color>
+        </step>
+      </mode>
+      <mode name='reverse_navigation'>
+        <active_leds>
+          <led>back_led</led>
+        </active_leds>
+        <step always_on='true'>
+          <color>0 1 1 1</color>
+        </step>
+      </mode>
+    </plugin>
+    <frame name='caster_wheel_joint' attached_to='chassis_base'>
+      <pose>-0.80571099999999996 0 -0.29999999999999999 0 0 0</pose>
+    </frame>
+    <frame name='caster' attached_to='caster_wheel_joint'>
+      <pose>0 0 0 0 0 0</pose>
+    </frame>
+  </model>
+</sdf>

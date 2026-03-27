@@ -72,17 +72,74 @@
       <mode name="front_navigation">
         <active_leds>
           <led>front_led</led>
+          <led>bottom_led</led>
         </active_leds>
         <step always_on="true">
-          <color>0 1 1 1</color>
+          <color>0.8 0.6 0 1</color>
         </step>
       </mode>
       <mode name="reverse_navigation">
         <active_leds>
           <led>back_led</led>
+          <led>bottom_led</led>
         </active_leds>
         <step always_on="true">
-          <color>0 1 1 1</color>
+          <color>0.8 0.6 0 1</color>
+        </step>
+      </mode>
+      <mode name="charging">
+        <active_leds>
+          <led>bottom_led</led>
+        </active_leds>
+        <step>
+          <color>0.3 1.0 0.6 1.0</color>
+          <intensity>4.0</intensity>
+          <on_time>0.12</on_time>
+        </step>
+        <step>
+          <color>0.3 1.0 0.6 1.0</color>
+          <intensity>3.6</intensity>
+          <on_time>0.12</on_time>
+        </step>
+        <step>
+          <color>0.3 1.0 0.6 1.0</color>
+          <intensity>3.2</intensity>
+          <on_time>0.12</on_time>
+        </step>
+        <step>
+          <color>0.3 1.0 0.6 1.0</color>
+          <intensity>2.8</intensity>
+          <on_time>0.12</on_time>
+        </step>
+        <step>
+          <color>0.3 1.0 0.6 1.0</color>
+          <intensity>2.4</intensity>
+          <on_time>0.12</on_time>
+        </step>
+        <step>
+          <color>0.3 1.0 0.6 1.0</color>
+          <intensity>2.0</intensity>
+          <on_time>0.12</on_time>
+        </step>
+        <step>
+          <color>0.3 1.0 0.6 1.0</color>
+          <intensity>1.6</intensity>
+          <on_time>0.12</on_time>
+        </step>
+        <step>
+          <color>0.3 1.0 0.6 1.0</color>
+          <intensity>1.2</intensity>
+          <on_time>0.12</on_time>
+        </step>
+        <step>
+          <color>0.3 1.0 0.6 1.0</color>
+          <intensity>0.8</intensity>
+          <on_time>0.12</on_time>
+        </step>
+        <step>
+          <color>0.3 1.0 0.6 1.0</color>
+          <intensity>0.4</intensity>
+          <on_time>0.12</on_time>
         </step>
       </mode>
     </plugin>

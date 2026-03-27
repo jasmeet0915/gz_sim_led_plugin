@@ -20,6 +20,7 @@
 #include <chrono>
 #include <optional>
 #include <vector>
+#include <algorithm>
 
 #include <gz/plugin/Register.hh>
 
@@ -328,6 +329,10 @@ class gz::sim::systems::LedPluginPrivate
   /// \brief Boolean that tells if all the LEDs are ready or not
   public: bool ledsReady{false};
 
+  /// \brief Whether LEDs are in the "off" / "reset" state.
+  /// When true, LEDs stay reset until a new mode is explicitly requested.
+  public: bool ledsOff{false};
+
   /// \brief Startup LED Mode to use
   public: LedMode startupLedMode;
 
@@ -533,6 +538,12 @@ void LedPlugin::PreUpdate(
   {
     this->dataPtr->ResetLEDs(_ecm);
     this->dataPtr->ledsReady = true;
+  }
+
+  // If LEDs are in the off/reset state, keep them reset and skip mode execution
+  if (this->dataPtr->ledsOff)
+  {
+    return;
   }
 
   // Set the current step from the current LED Mode
@@ -785,14 +796,29 @@ bool LedPluginPrivate::OnLedModeChange(const msgs::StringMsg &_req,
   gzmsg << "[LED PLUGIN] [ON MODE CHANGE] received request to change mode to: "
         << requestedModeName << std::endl;
 
+  // Case-insensitive comparison
+  std::string requestedModeNameLower = requestedModeName;
+  std::transform(requestedModeNameLower.begin(), requestedModeNameLower.end(),
+    requestedModeNameLower.begin(), ::tolower);
+
+  // Reset all LEDs and keep them off is user requested "reset" or "off" mode
+  if (requestedModeNameLower == "reset" || requestedModeNameLower == "off")
+  {
+    gzmsg << "[LED PLUGIN] [ON MODE CHANGE] Turning off LEDs (reset/off requested)" << std::endl;
+    this->ledsOff = true;
+    this->ledsReady = false;
+    _resp.set_data(true);
+    return true;
+  }
+
+  // Case-insensitive search for the requested mode
   auto ledModeIter = std::find_if(this->allLedModes.begin(), this->allLedModes.end(),
-    [&](LedMode _mode)
+    [&](const LedMode &_mode)
     {
-      if (_mode.name == requestedModeName)
-      {
-        return true;
-      }
-      return false;
+      std::string modeNameLower = _mode.name;
+      std::transform(modeNameLower.begin(), modeNameLower.end(),
+        modeNameLower.begin(), ::tolower);
+      return modeNameLower == requestedModeNameLower;
     });
 
   // If the requested mode was not found
@@ -806,11 +832,12 @@ bool LedPluginPrivate::OnLedModeChange(const msgs::StringMsg &_req,
   }
 
   gzmsg << "[LED PLUGIN] [ON MODE CHANGE] Changing led mode from: "
-        << this->currentLedMode.name << " to: " << requestedModeName << std::endl;
+        << this->currentLedMode.name << " to: " << ledModeIter->name << std::endl;
 
   this->currentLedMode = *(ledModeIter);
   this->currentModeStepIdx = 0;
   this->cycleStartTime = std::chrono::duration<double>::zero();
+  this->ledsOff = false;
   gzmsg << "[LED PLUGIN] [ON MODE CHANGE] Current led mode set to: "
         << this->currentLedMode.name << std::endl;
 

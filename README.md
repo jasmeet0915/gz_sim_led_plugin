@@ -4,13 +4,13 @@ A Gazebo system plugin for simulating LED systems using visuals and lights. This
 
 The plugin introduces the concept of LED modes, allowing users to define different LED behaviors in SDF. A runtime mode change service is provided to switch between these modes dynamically (for example, transitioning from an idle mode to a fault or emergency mode).
 
+![LED Plugin Demo world](media/gazebo_led_plugin_demo.gif)
+_Demo gif from the [led_plugin.sdf](examples/led_plugin.sdf) example world showing 2 robots and an industrial tower lamp model each having different LED group with different modes._
+
 ![Dance Party Demo Party mode](media/dance_party_party_mode.gif)
 _Demo gif from the [dance_party.sdf](examples/dance_party.sdf) example world which creates a Disco Light model for, well, a dance party._
 
 > BTW: The Tom model was taken from [Sketchfab](https://sketchfab.com/3d-models/tom-multiversus-tom-and-jerry-4996154491b14356a8ebc40ab62179ab) and animated using Mixamo and Blender. The SDF model is available in this repo and on [Gazebo Fuel](https://app.gazebosim.org/jasmeetsingh/fuel/models/Dancing%20Tom%20Cat) as well ;)
-
-![LED Plugin Demo world](media/gazebo_led_plugin_demo.gif)
-_Demo gif from the [led_plugin.sdf](examples/led_plugin.sdf) example world showing 2 robots and an industrial tower lamp model each having different LED group with different modes._
 
 ## Terminology
 
